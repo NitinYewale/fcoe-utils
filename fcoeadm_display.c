@@ -440,7 +440,7 @@ static void list_luns_by_rport(char *rport, enum disp_style style)
 	sa_dir_crawl(path, search_rport_targets, style);
 }
 
-static void scan_device_map(char *port, char *rport, enum disp_style style)
+static void scan_device_map(char *rport, enum disp_style style)
 {
 	if (style == DISP_TARG)
 		show_short_lun_info_header();
@@ -455,7 +455,7 @@ static void scan_device_map(char *port, char *rport, enum disp_style style)
 static void show_port_stats_header(const char *ifname, int interval)
 {
 	printf("\n");
-	printf("%-7s interval: %-2d                                    Err  Inv  "
+	printf("%-15s interval: %-2d                            Err  Inv  "
 	       "IvTx Link Cntl Input     Input     Output    Output\n",
 	       ifname, interval);
 	printf("Seconds TxFrames  TxBytes      RxFrames  RxBytes        "
@@ -540,7 +540,8 @@ free_host:
 	return rc;
 }
 
-static int get_host_from_vport(struct dirent *dp, void *arg)
+static int get_host_from_vport(struct dirent *dp,
+			void *arg __attribute__ ((unused)))
 {
 	if (!strncmp(dp->d_name, "host", strlen("host"))) {
 		struct port_attributes *port_attrs;
@@ -621,7 +622,8 @@ free_pcidev:
 	return rc;
 }
 
-static int search_fc_adapter(struct dirent *dp, void *arg)
+static int search_fc_adapter(struct dirent *dp,
+			void *arg __attribute__ ((unused)))
 {
 	display_one_adapter_info(dp->d_name);
 	return 0;
@@ -724,7 +726,7 @@ static enum fcoe_status display_one_target_info(char *ifname, char *rport,
 	 * This will print the LUN table
 	 * under the target.
 	 */
-	scan_device_map(ifname,	rport, style);
+	scan_device_map(rport, style);
 
 free_port_attribs:
 	free(port_attrs);
@@ -891,7 +893,7 @@ static void
 print_interface_fcoe_lesb_stats_header(const char *ifname, int interval)
 {
 	printf("\n");
-	printf("%-7s interval: %-2d\n", ifname, interval);
+	printf("%-15s interval: %-2d\n", ifname, interval);
 	printf("LinkFail VLinkFail MissFKA SymbErr ErrBlkCnt FCSErrCnt\n");
 	printf("-------- --------- ------- ------- --------- ---------\n");
 }
